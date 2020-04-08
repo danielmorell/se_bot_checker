@@ -50,6 +50,7 @@ crawlers are the most common search engine crawlers.
 
 | Bot           | User Agent | IP | DNS |
 |---------------|------------|----|-----|
+| `BaiduSpider` | X          | X* | X** |
 | `BingBot`     | X          | X* | X   |
 | `DuckDuckBot` | X          | X  |     |
 | `GoogleBot`   | X          | X* | X   |
@@ -58,6 +59,9 @@ crawlers are the most common search engine crawlers.
 \* IP validation is only used on consecutive checks run using the same bot checker instance. This means that in the 
 following example there will be only one DNS network request since the IP in `test_two` has already been validated when 
 `test_one` was run.
+
+\** BaiduSpider only supports reverse DNS validation not reverse and forward. Although it on first glance it appears
+BaiduSpider should support reverse/forward DNS validation I have never had forward success for BaiduSpider. 
 
 ```python
 from se_bot_checker.bots import GoogleBot
@@ -74,6 +78,16 @@ test_two = googlebot(
 print(test_two)  # (True, 'googlebot')
 ```
 
+### `BaiduSpider`
+
+BaiduSpider validation only uses reverse DNS lookup not reverse and forward.
+
+- **Name:** `baiduspider`
+- **Domains:** `.baidu.com`, `.baidu.jp`
+- **User Agents:** `baiduspider`
+- **Use RegEx:** `False`
+
+
 ### `BingBot`
 
 - **Name:** `bingbot`
@@ -82,6 +96,8 @@ print(test_two)  # (True, 'googlebot')
 - **Use RegEx:** `True`
 
 ### `DuckDuckBot`
+
+DuckDuckBot only uses IP validation from the list of valid IPs.
 
 - **Name:** `duckduckbot`
 - **IPs:** See list below
