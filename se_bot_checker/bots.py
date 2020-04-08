@@ -62,7 +62,7 @@ class AbstractBot:
         :return: Tuple[bool, str] --
         """
         self.request_ip = ip
-        self.request_user_agent = user_agent.lower()
+        self.request_user_agent = user_agent
         return self.run()
 
     def run(self) -> Tuple[bool, str]:
@@ -106,8 +106,8 @@ class AbstractBot:
         :return: bool -- True if ``request_user_agent`` matches the signature.
         """
         if self.use_regex:
-            return bool(re.search(self.user_agent, self.request_user_agent))
-        return self.user_agent in self.request_user_agent
+            return bool(re.search(self.user_agent, self.request_user_agent.lower()))
+        return self.user_agent in self.request_user_agent.lower()
 
     def valid_domain(self, host: str) -> bool:
         """
