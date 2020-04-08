@@ -35,7 +35,8 @@ print(test_two)
 
 ## Prebuilt Bots
 
-There are several bot definitions that are already created, have been tested and will be maintained. The prebuilt crawlers are the most common search engine crawlers.
+There are several bot definitions that are already created, have been tested and will be maintained. The prebuilt 
+crawlers are the most common search engine crawlers.
 
 ### Crawler validation methods
 
@@ -46,7 +47,9 @@ There are several bot definitions that are already created, have been tested and
 | `GoogleBot`   | X          | X* | X   |
 | `YandexBot`   | X          | X* | X   |
 
-\* IP validation is only used on consecutive checks run using the same bot checker instance. This means that in the following example there will be only one DNS network request since the IP in `test_two` has already been validated when `test_one` was run.
+\* IP validation is only used on consecutive checks run using the same bot checker instance. This means that in the 
+following example there will be only one DNS network request since the IP in `test_two` has already been validated when 
+`test_one` was run.
 
 ```python
 from se_bot_checker.bots import GoogleBot
@@ -109,14 +112,15 @@ Updated: April 04, 2020
 
 ## Creating Your Own Bot Definition
 
-SE Bot Checker was designed to be extensible. The core of SE Bot Checker is the `AbstractBot` class. To create your own bot you can simply extend `AbstractBot`.
+SE Bot Checker was designed to be extensible. The core of SE Bot Checker is the `Bot` class. To create your own 
+bot you can simply extend `Bot`.
 
 Here is custom bot that will only validate Googlebot mobile.
 
 ```python
-from se_bot_checker.bots import AbstractBot
+from se_bot_checker.bots import Bot
 
-class MobileGoogleBot(AbstractBot):
+class MobileGoogleBot(Bot):
     """
     Mobile googlebot checker
     """

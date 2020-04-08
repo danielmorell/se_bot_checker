@@ -18,7 +18,7 @@ class DNSError(OSError):
     pass
 
 
-class AbstractBot:
+class Bot:
     """
     This class is the core of SE Bot Checker. It handles the validation process. All
     bot definitions should subclass this class.
@@ -38,10 +38,22 @@ class AbstractBot:
     request_ip = None
     request_user_agent = None
 
-    def __init__(self, use_reverse_dns: bool = None):
+    def __init__(self, name: str, user_agent: str, domains: List[str] = [], use_regex: bool = False,
+                 use_reverse_dns: bool = None):
         """
         The bot class constructor method.
 
+        :param name: The name of the new bot to return if valid.
+        :type name: str
+        :param user_agent: The user agent signature to match ``request_user_agent``
+            strings against.
+        :type user_agent: str
+        :param domains: A list of valid domains that the reverse DNS host can match.
+            Defaults to an empty list.
+        :type domains: List[str]
+        :param use_regex: ``True`` if you want to use RegEx to match the user agent.
+            Defaults to ``False``.
+        :type use_regex: bool
         :param use_reverse_dns: ``True`` if DNS requests should be made. This can slow
             down the validation. However, for most crawlers this is the only way to
             verify the validity of a crawler IP. You can turn this off if you want to
@@ -50,6 +62,10 @@ class AbstractBot:
         """
         if use_reverse_dns is not None:
             self.use_reverse_dns = use_reverse_dns
+        self.name = name
+        self.user_agent = user_agent
+        self.domains = domains
+        self.use_regex = use_regex
 
     def __call__(self, ip: str, user_agent: str) -> Tuple[bool, str]:
         """
@@ -166,39 +182,7 @@ class AbstractBot:
         return ip == self.request_ip
 
 
-class InstantBot(AbstractBot):
-    """
-    Use this class to quickly create a new bot without needing to subclass
-    ``AbstractBot``.
-    """
-    def __init__(self, name: str, user_agent: str, domains: List[str] = [], use_regex: bool = False,
-                 use_reverse_dns: bool = True):
-        """
-        The new bot type constructor method.
-
-        :param name: The name of the new bot to return if valid.
-        :type name: str
-        :param user_agent: The user agent signature to match ``request_user_agent``
-            strings against.
-        :type user_agent: str
-        :param domains: A list of valid domains that the reverse DNS host can match.
-            Defaults to an empty list.
-        :type domains: List[str]
-        :param use_regex: ``True`` if you want to use RegEx to match the user agent.
-            Defaults to ``False``.
-        :type use_regex: bool
-        :param use_reverse_dns: ``True`` if you want SE Bot Checker to make DNS
-            requests to validate crawler IPs. Defaults to ``True``.
-        :type use_reverse_dns: bool
-        """
-        super().__init__(use_reverse_dns=use_reverse_dns)
-        self.name = name
-        self.user_agent = user_agent
-        self.domains = domains
-        self.use_regex = use_regex
-
-
-class GoogleBot(AbstractBot):
+class GoogleBot(Bot):
     """
     A prebuilt GoogleBot bot checker class.
     """
@@ -207,7 +191,7 @@ class GoogleBot(AbstractBot):
     user_agent = 'googlebot'
 
 
-class BingBot(AbstractBot):
+class BingBot(Bot):
     """
     A prebuilt BingBot bot checker class.
     """
@@ -217,7 +201,7 @@ class BingBot(AbstractBot):
     use_regex = True
 
 
-class YandexBot(AbstractBot):
+class YandexBot(Bot):
     """
     A prebuilt YandexBot bot checker class.
     """
@@ -227,7 +211,7 @@ class YandexBot(AbstractBot):
     use_regex = True
 
 
-class DuckDuckBot(AbstractBot):
+class DuckDuckBot(Bot):
     """
     A prebuilt DuckDuckBot bot checker class.
     """
