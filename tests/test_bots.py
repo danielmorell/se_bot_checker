@@ -1,5 +1,5 @@
 from unittest import TestCase
-from se_bot_checker.bots import Bot, BingBot, DuckDuckBot, GoogleBot, YandexBot, DNSError
+from se_bot_checker.bots import Bot, BaiduSpider, BingBot, DuckDuckBot, GoogleBot, YandexBot, DNSError
 
 
 class TestBot(TestCase):
@@ -48,6 +48,52 @@ class TestBot(TestCase):
         except DNSError:
             is_dooglebot, name = (False, 'unknown')
         self.assertTupleEqual((is_dooglebot, name), self.invalid)
+
+
+class TestBaiduSpider(TestCase):
+    def setUp(self):
+        self.baiduspider = BaiduSpider()
+        self.baiduspider(
+            '220.181.108.120',
+            'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)'
+        )
+        self.host = self.baiduspider.reverse_dns()
+
+    def test_run(self):
+        self.assertTupleEqual(self.baiduspider.run(), (True, 'baiduspider'))
+
+    def test_valid_user_agent(self):
+        self.assertTrue(self.baiduspider.valid_user_agent())
+
+    def test_valid_domain(self):
+        self.assertTrue(self.baiduspider.valid_domain(self.host))
+
+    def test_valid_ip(self):
+        self.assertTrue(self.baiduspider.valid_ip())
+
+    def test_reverse_dns(self):
+        self.assertTrue(self.host.endswith('.baidu.com'))
+
+    def test_not_baiduspider_ip(self):
+        try:
+            is_baiduspider, name = self.baiduspider(
+                '10.10.10.10',
+                'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)'
+            )
+        except DNSError:
+            is_baiduspider, name = (False, 'unknown')
+        self.assertTupleEqual((is_baiduspider, name), (False, 'unknown'))
+
+    def test_not_baiduspider_user_agent(self):
+        try:
+            is_baiduspider, name = self.baiduspider(
+                '220.181.108.120',
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                '(KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36'
+            )
+        except DNSError:
+            is_baiduspider, name = (False, 'unknown')
+        self.assertTupleEqual((is_baiduspider, name), (False, 'unknown'))
 
 
 class TestBingBot(TestCase):

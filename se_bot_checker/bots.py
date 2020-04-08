@@ -200,6 +200,16 @@ class Bot:
         return ip == self.request_ip
 
 
+class BaiduSpider(Bot):
+    """
+    A prebuilt BaiduBot bot checker class.
+    """
+    name = 'baiduspider'
+    domains = ['.baidu.com', '.baidu.jp']
+    user_agent = 'baiduspider'
+    use_forward_dns = False
+
+
 class BingBot(Bot):
     """
     A prebuilt BingBot bot checker class.
