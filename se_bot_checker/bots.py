@@ -34,11 +34,12 @@ class Bot:
     use_regex = False
 
     use_reverse_dns = True
+    use_forward_dns = True
 
     request_ip = None
     request_user_agent = None
 
-    def __init__(self, use_reverse_dns: bool = None):
+    def __init__(self, use_reverse_dns: bool = None, use_forward_dns: bool = None):
         """
         The bot class constructor method.
 
@@ -67,7 +68,7 @@ class Bot:
 
     @classmethod
     def bot(cls, name: str, user_agent: str, domains: List[str] = [], use_regex: bool = False,
-            use_reverse_dns: bool = True):
+            use_reverse_dns: bool = True, use_forward_dns: bool = True):
         """
         The bot class constructor method.
 
@@ -82,14 +83,16 @@ class Bot:
         :param use_regex: ``True`` if you want to use RegEx to match the user agent.
             Defaults to ``False``.
         :type use_regex: bool
-        :param use_reverse_dns: ``True`` if DNS requests should be made. This can slow
-            down the validation. However, for most crawlers this is the only way to
-            verify the validity of a crawler IP. You can turn this off if you want to
-            quickly match against a list of known valid IPs.
+        :param use_reverse_dns: ``True`` if DNS reverse requests should be made. This
+            can slow down the validation. However, for most crawlers this is the only
+            way to verify the validity of a crawler IP. You can turn this off if you
+            want to quickly match against a list of known valid IPs.
+        :type use_forward_dns: bool
+        :param use_forward_dns: ``True`` if DNS forward requests should be made.
         :type use_reverse_dns: bool
         :return: Bot instance
         """
-        bot = cls(use_reverse_dns)
+        bot = cls(use_reverse_dns, use_forward_dns)
         bot.name = name
         bot.user_agent = user_agent
         bot.domains = domains
@@ -120,7 +123,7 @@ class Bot:
         if not self.valid_domain(host):
             return False, 'unknown'
         # Validate forward DNS host matches IP.
-        if not self.forward_dns(host):
+        if self.use_forward_dns and not self.forward_dns(host):
             return False, 'unknown'
         # All tests passed
         # Add request IP to the list of valid IPs
