@@ -1,0 +1,12 @@
+# IDE, Build, System Related Files #
+.buildpath
+.project
+*.egg-info
+.settings
+.DS_Store
+.idea
+.vscode
+__pycache__
+build
+dist
+temp
