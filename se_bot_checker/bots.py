@@ -221,7 +221,7 @@ class YandexBot(Bot):
     A prebuilt YandexBot bot checker class.
     """
     name = 'yandexbot'
-    domains = ['yandex.ru', 'yandex.net', 'yandex.com']
+    domains = ['.yandex.ru', '.yandex.net', '.yandex.com']
     user_agent = r'yandex|yadirectfetcher'
     use_regex = True
 
