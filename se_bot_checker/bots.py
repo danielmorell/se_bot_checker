@@ -197,15 +197,6 @@ class Bot:
         return ip == self.request_ip
 
 
-class GoogleBot(Bot):
-    """
-    A prebuilt GoogleBot bot checker class.
-    """
-    name = 'googlebot'
-    domains = ['.googlebot.com', '.google.com']
-    user_agent = 'googlebot'
-
-
 class BingBot(Bot):
     """
     A prebuilt BingBot bot checker class.
@@ -213,16 +204,6 @@ class BingBot(Bot):
     name = 'bingbot'
     domains = ['.search.msn.com']
     user_agent = r'bingbot|msnbot|bingpreview'
-    use_regex = True
-
-
-class YandexBot(Bot):
-    """
-    A prebuilt YandexBot bot checker class.
-    """
-    name = 'yandexbot'
-    domains = ['.yandex.ru', '.yandex.net', '.yandex.com']
-    user_agent = r'yandex|yadirectfetcher'
     use_regex = True
 
 
@@ -245,4 +226,23 @@ class DuckDuckBot(Bot):
             '107.21.1.8',
         ]
     user_agent = r'duckduckbot|duckduckgo'
+    use_regex = True
+
+
+class GoogleBot(Bot):
+    """
+    A prebuilt GoogleBot bot checker class.
+    """
+    name = 'googlebot'
+    domains = ['.googlebot.com', '.google.com']
+    user_agent = 'googlebot'
+
+
+class YandexBot(Bot):
+    """
+    A prebuilt YandexBot bot checker class.
+    """
+    name = 'yandexbot'
+    domains = ['.yandex.ru', '.yandex.net', '.yandex.com']
+    user_agent = r'yandex|yadirectfetcher'
     use_regex = True
