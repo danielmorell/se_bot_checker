@@ -1,5 +1,5 @@
 from unittest import TestCase
-from se_bot_checker.bots import Bot, BingBot, GoogleBot, YandexBot, DNSError
+from se_bot_checker.bots import Bot, BingBot, DuckDuckBot, GoogleBot, YandexBot, DNSError
 
 
 class TestBot(TestCase):
@@ -102,6 +102,46 @@ class TestBingBot(TestCase):
         except DNSError:
             is_msnbot, name = (False, 'unknown')
         self.assertTupleEqual((is_msnbot, name), (True, 'bingbot'))
+
+
+class TestDuckDuckBot(TestCase):
+    def setUp(self):
+        self.duckduckbot = DuckDuckBot()
+        self.duckduckbot(
+            '54.208.102.37',
+            'Mozilla/5.0 (compatible; DuckDuckGo-Favicons-Bot/1.0; +http://duckduckgo.com)'
+        )
+        self.host = self.duckduckbot.reverse_dns()
+
+    def test_run(self):
+        self.assertTupleEqual(self.duckduckbot.run(), (True, 'duckduckbot'))
+
+    def test_valid_user_agent(self):
+        self.assertTrue(self.duckduckbot.valid_user_agent())
+
+    def test_valid_ip(self):
+        self.assertTrue(self.duckduckbot.valid_ip())
+
+    def test_not_duckduckbot_ip(self):
+        try:
+            is_duckduckbot, name = self.duckduckbot(
+                '10.10.10.10',
+                'Mozilla/5.0 (compatible; DuckDuckGo-Favicons-Bot/1.0; +http://duckduckgo.com)'
+            )
+        except DNSError:
+            is_duckduckbot, name = (False, 'unknown')
+        self.assertTupleEqual((is_duckduckbot, name), (False, 'unknown'))
+
+    def test_not_duckduckbot_user_agent(self):
+        try:
+            is_duckduckbot, name = self.duckduckbot(
+                '54.208.102.37',
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                '(KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36'
+            )
+        except DNSError:
+            is_duckduckbot, name = (False, 'unknown')
+        self.assertTupleEqual((is_duckduckbot, name), (False, 'unknown'))
 
 
 class TestGoogleBot(TestCase):

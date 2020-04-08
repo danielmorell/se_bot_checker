@@ -93,7 +93,7 @@ print(test_two)  # (True, 'googlebot')
 54.208.102.37
 107.21.1.8
 
-Updated: April 04, 2020
+Updated: April 08, 2020
 ```
 
 ### `GoogleBot`
@@ -150,9 +150,8 @@ means we can simply extend `GoogleBot`. This is the recommended approach when po
 This class is the core of SE Bot Checker. It handles the validation process. New bot definitions should subclass this 
 class.
 
-A single bot class can be instantiated once and called many times. The allows
-base settings to be configured and multiple IP and user agent pairs to be
-validated simply.
+A single bot class can be instantiated once and called many times. The allows base settings to be configured and 
+multiple IP and user agent pairs to be validated simply.
 
 **`Bot.name`:** `str` This is the name the bot will return if it validates to `True`.
 
