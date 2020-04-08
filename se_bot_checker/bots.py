@@ -203,7 +203,7 @@ class GoogleBot(AbstractBot):
     A prebuilt GoogleBot bot checker class.
     """
     name = 'googlebot'
-    domains = ['googlebot.com', 'google.com']
+    domains = ['.googlebot.com', '.google.com']
     user_agent = 'googlebot'
 
 
@@ -212,7 +212,7 @@ class BingBot(AbstractBot):
     A prebuilt BingBot bot checker class.
     """
     name = 'bingbot'
-    domains = ['search.msn.com']
+    domains = ['.search.msn.com']
     user_agent = r'bingbot|msnbot|bingpreview'
     use_regex = True
 
