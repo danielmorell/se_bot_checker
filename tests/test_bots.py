@@ -1,5 +1,5 @@
 from unittest import TestCase
-from se_bot_checker.bots import Bot, BingBot, GoogleBot, DNSError
+from se_bot_checker.bots import Bot, BingBot, GoogleBot, YandexBot, DNSError
 
 
 class TestBot(TestCase):
@@ -148,3 +148,53 @@ class TestGoogleBot(TestCase):
         except DNSError:
             is_googlebot, name = (False, 'unknown')
         self.assertTupleEqual((is_googlebot, name), (False, 'unknown'))
+
+
+class TestYandexBot(TestCase):
+    def setUp(self):
+        self.yandexbot = YandexBot()
+        self.yandexbot('77.88.5.141', 'Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)')
+        self.host = self.yandexbot.reverse_dns()
+
+    def test_run(self):
+        self.assertTupleEqual(self.yandexbot.run(), (True, 'yandexbot'))
+
+    def test_valid_user_agent(self):
+        self.assertTrue(self.yandexbot.valid_user_agent())
+
+    def test_valid_domain(self):
+        self.assertTrue(self.yandexbot.valid_domain(self.host))
+
+    def test_valid_ip(self):
+        self.assertTrue(self.yandexbot.valid_ip())
+
+    def test_reverse_dns(self):
+        self.assertTrue(
+            self.host.endswith('.yandex.ru')
+            or self.host.endswith('.yandex.net')
+            or self.host.endswith('.yandex.com')
+        )
+
+    def test_forward_dns(self):
+        self.assertTrue(self.yandexbot.forward_dns(self.host))
+
+    def test_not_yandexbot_ip(self):
+        try:
+            is_yandexbot, name = self.yandexbot(
+                '10.10.10.10',
+                'Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)'
+            )
+        except DNSError:
+            is_yandexbot, name = (False, 'unknown')
+        self.assertTupleEqual((is_yandexbot, name), (False, 'unknown'))
+
+    def test_not_yandexbot_user_agent(self):
+        try:
+            is_yandexbot, name = self.yandexbot(
+                '77.88.5.141',
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                '(KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36'
+            )
+        except DNSError:
+            is_yandexbot, name = (False, 'unknown')
+        self.assertTupleEqual((is_yandexbot, name), (False, 'unknown'))
