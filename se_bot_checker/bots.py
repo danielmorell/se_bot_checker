@@ -144,7 +144,7 @@ class Bot:
         """
         Checks if the ``host`` is matches a valid domain or super domain.
 
-        :param host: The host name form :func:`reverse_dns`.
+        :param host: The host name from :func:`reverse_dns`.
         :type host: str
         :return:
         """
