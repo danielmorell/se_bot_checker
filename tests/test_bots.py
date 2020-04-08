@@ -1,5 +1,5 @@
 from unittest import TestCase
-from se_bot_checker.bots import Bot, GoogleBot, DNSError
+from se_bot_checker.bots import Bot, BingBot, GoogleBot, DNSError
 
 
 class TestBot(TestCase):
@@ -48,6 +48,60 @@ class TestBot(TestCase):
         except DNSError:
             is_dooglebot, name = (False, 'unknown')
         self.assertTupleEqual((is_dooglebot, name), self.invalid)
+
+
+class TestBingBot(TestCase):
+    def setUp(self):
+        self.bingbot = BingBot()
+        self.bingbot('157.55.39.250', 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)')
+        self.bingbot_host = self.bingbot.reverse_dns()
+        self.msnbot = BingBot()
+
+    def test_run(self):
+        self.assertTupleEqual(self.bingbot.run(), (True, 'bingbot'))
+
+    def test_valid_user_agent(self):
+        self.assertTrue(self.bingbot.valid_user_agent())
+
+    def test_valid_domain(self):
+        self.assertTrue(self.bingbot.valid_domain(self.bingbot_host))
+
+    def test_valid_ip(self):
+        self.assertTrue(self.bingbot.valid_ip())
+
+    def test_reverse_dns(self):
+        self.assertTrue(self.bingbot_host.endswith('.search.msn.com'))
+
+    def test_forward_dns(self):
+        self.assertTrue(self.bingbot.forward_dns(self.bingbot_host))
+
+    def test_not_bingbot_ip(self):
+        try:
+            is_bingbot, name = self.bingbot(
+                '10.10.10.10',
+                'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'
+            )
+        except DNSError:
+            is_bingbot, name = (False, 'unknown')
+        self.assertTupleEqual((is_bingbot, name), (False, 'unknown'))
+
+    def test_not_bingbot_user_agent(self):
+        try:
+            is_bingbot, name = self.bingbot(
+                '157.55.39.250',
+                'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                '(KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36'
+            )
+        except DNSError:
+            is_bingbot, name = (False, 'unknown')
+        self.assertTupleEqual((is_bingbot, name), (False, 'unknown'))
+
+    def test_is_msnbot(self):
+        try:
+            is_msnbot, name = self.msnbot('207.46.13.182', 'msnbot/2.0b (+http://search.msn.com/msnbot.htm)')
+        except DNSError:
+            is_msnbot, name = (False, 'unknown')
+        self.assertTupleEqual((is_msnbot, name), (True, 'bingbot'))
 
 
 class TestGoogleBot(TestCase):
