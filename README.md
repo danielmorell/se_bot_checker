@@ -142,7 +142,32 @@ class MobileGoogleBot(GoogleBot):
     user_agent = 'android.*googlebot'
 ```
 
-Both the desktop and mobile versions of Googlebot use the same domains for the reverse/forward DNS validation. This means we can simply extend `GoogleBot`. This is the recommended approach when possible.
+Both the desktop and mobile versions of Googlebot use the same domains for the reverse/forward DNS validation. This 
+means we can simply extend `GoogleBot`. This is the recommended approach when possible.
+
+### `Bot` API
+
+This class is the core of SE Bot Checker. It handles the validation process. New bot definitions should subclass this 
+class.
+
+A single bot class can be instantiated once and called many times. The allows
+base settings to be configured and multiple IP and user agent pairs to be
+validated simply.
+
+**`Bot.name`:** `str` This is the name the bot will return if it validates to `True`.
+
+**`Bot.ips`:** `iterable` A list of known valid IPs.
+
+**`Bot.domains`:** `iterable` A list of known valid domains. This is used to validate the results of the reverse
+DNS lookup. An exact match or a super domain of the DNS lookup results is considered a positive match.
+
+**`Bot.user_agent`:** `str` A substring or RegEx pattern to use to validate the request user agent. For the best
+performance and compatibility request user agent string are changed to lowercase prior to matching. the `user_agent` 
+string should be lower case. If you need to validate upper or mixed case user agents you can override the 
+`Bot.valid_user_agent()` method.
+
+**`Bot.use_regex`:** `bool` Whether the user agent validation should use substring or regex matching. If 
+`user_agent` is just a string and not a RegEx pattern this should be `False`. It slightly faster. Defaults to `False`.
 
 ## Contributors
 
