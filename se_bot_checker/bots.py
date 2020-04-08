@@ -38,8 +38,36 @@ class Bot:
     request_ip = None
     request_user_agent = None
 
-    def __init__(self, name: str, user_agent: str, domains: List[str] = [], use_regex: bool = False,
-                 use_reverse_dns: bool = None):
+    def __init__(self, use_reverse_dns: bool = None):
+        """
+        The bot class constructor method.
+
+        :param use_reverse_dns: ``True`` if DNS requests should be made. This can slow
+            down the validation. However, for most crawlers this is the only way to
+            verify the validity of a crawler IP. You can turn this off if you want to
+            quickly match against a list of known valid IPs.
+        :type use_reverse_dns: bool
+        """
+        if use_reverse_dns is not None:
+            self.use_reverse_dns = use_reverse_dns
+
+    def __call__(self, ip: str, user_agent: str) -> Tuple[bool, str]:
+        """
+        This method runs the validation.
+
+        :param ip: This is the IP of the crawler to validate.
+        :type ip: str
+        :param user_agent: This is the user agent string of the crawler.
+        :type user_agent: str
+        :return: Tuple[bool, str] --
+        """
+        self.request_ip = ip
+        self.request_user_agent = user_agent
+        return self.run()
+
+    @classmethod
+    def bot(cls, name: str, user_agent: str, domains: List[str] = [], use_regex: bool = False,
+            use_reverse_dns: bool = True):
         """
         The bot class constructor method.
 
@@ -59,27 +87,14 @@ class Bot:
             verify the validity of a crawler IP. You can turn this off if you want to
             quickly match against a list of known valid IPs.
         :type use_reverse_dns: bool
+        :return: Bot instance
         """
-        if use_reverse_dns is not None:
-            self.use_reverse_dns = use_reverse_dns
-        self.name = name
-        self.user_agent = user_agent
-        self.domains = domains
-        self.use_regex = use_regex
-
-    def __call__(self, ip: str, user_agent: str) -> Tuple[bool, str]:
-        """
-        This method runs the validation.
-
-        :param ip: This is the IP of the crawler to validate.
-        :type ip: str
-        :param user_agent: This is the user agent string of the crawler.
-        :type user_agent: str
-        :return: Tuple[bool, str] --
-        """
-        self.request_ip = ip
-        self.request_user_agent = user_agent
-        return self.run()
+        bot = cls(use_reverse_dns)
+        bot.name = name
+        bot.user_agent = user_agent
+        bot.domains = domains
+        bot.use_regex = use_regex
+        return bot
 
     def run(self) -> Tuple[bool, str]:
         """
