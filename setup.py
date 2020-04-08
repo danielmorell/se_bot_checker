@@ -17,7 +17,7 @@ with io.open("README.md", "rt", encoding='utf8') as fh:
     readme = fh.read()
 
 setup(
-    name='cruncher',
+    name='se_bot_checker',
     version=version,
     license='GPLv3+',
     url='https://github.com/danielmorell/se_bot_checker',
@@ -35,8 +35,10 @@ setup(
     include_package_data=True,
     python_requires=">=3.6",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
+        "Intended Audience :: System Administrators",
+        "Intended Audience :: Information Technology",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
