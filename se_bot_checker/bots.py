@@ -48,9 +48,14 @@ class Bot:
             verify the validity of a crawler IP. You can turn this off if you want to
             quickly match against a list of known valid IPs.
         :type use_reverse_dns: bool
+        :param use_forward_dns: ``True`` if after the reverse DNS request a forward DNS
+            request should be made to validate the results of the reverse DNS lookup.
+        :type use_forward_dns: bool
         """
         if use_reverse_dns is not None:
             self.use_reverse_dns = use_reverse_dns
+        if use_forward_dns is not None:
+            self.use_forward_dns = use_forward_dns
 
     def __call__(self, ip: str, user_agent: str) -> Tuple[bool, str]:
         """
