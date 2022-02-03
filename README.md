@@ -1,6 +1,6 @@
 # Search Engine Bot Checker
 
-[![Version](https://flat.badgen.net/badge/PyPI/v1.0.2)](https://pypi.org/project/se-bot-checker/)
+[![Version](https://flat.badgen.net/badge/PyPI/v1.0.3)](https://pypi.org/project/se-bot-checker/)
 
 This is a simple python library that verifies the validity of a search engine crawler based on it's IP and user agent.
 
